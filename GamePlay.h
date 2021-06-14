@@ -22,7 +22,6 @@ class GamePlay
         {
             srand(time(NULL));
         }
-        int rollDice();
 
 };
 
