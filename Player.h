@@ -37,6 +37,7 @@ class Player
         Token* getToken(int tokenNum);
         void incHitCount();
         int getHitCount()const;
+        int getTotalTokens()const;
 };
 
 #endif

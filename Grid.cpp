@@ -19,14 +19,14 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
                 board[token->xPos][token->yPos] = static_cast<void *>(token);
                 std::cout << "Red's Token " << tokenNum << " left home!" << std::endl;
             }
-            else if(token->color == "Blue")
+            else if(token->color == "Green")
             {
                 token->cellNo = 21;
                 Coordinates xy = this->get2DCoordinates(token->cellNo);
                 token->xPos = xy.x;
                 token->yPos = xy.y;
                 board[token->xPos][token->yPos] = static_cast<void *>(token);
-                std::cout << "Blue's Token " << tokenNum << " left home!" << std::endl;
+                std::cout << "Green's Token " << tokenNum << " left home!" << std::endl;
             }
             else if(token->color == "Yellow")
             {
@@ -37,14 +37,14 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
                 board[token->xPos][token->yPos] = static_cast<void *>(token);
                 std::cout << "Yellow's Token " << tokenNum << " left home!" << std::endl;
             }
-            else if(token->color == "Green")
+            else if(token->color == "Blue")
             {
                 token->cellNo = 47;
                 Coordinates xy = this->get2DCoordinates(token->cellNo);
                 token->xPos = xy.x;
                 token->yPos = xy.y;
                 board[token->xPos][token->yPos] = static_cast<void *>(token);
-                std::cout << "Green's Token " << tokenNum << " left home!" << std::endl;
+                std::cout << "Blue's Token " << tokenNum << " left home!" << std::endl;
             }
         }
         else
@@ -137,8 +137,8 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
                 return;
             }
         }
-        // Blues Home Run
-        else if(destinationCell > 19 && token->color == "Blue" && cellNo <= 19 && cellNo >= 14)
+        // Greens Home Run
+        else if(destinationCell > 19 && token->color == "Green" && cellNo <= 19 && cellNo >= 14)
         {
             if(player.getHitCount() >= 1)
             {
@@ -153,7 +153,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             }
         }
         // Yellows Home Run
-        else if(destinationCell > 32 && token->color == "Blue" && cellNo <= 32 && cellNo >= 27)
+        else if(destinationCell > 32 && token->color == "Yellow" && cellNo <= 32 && cellNo >= 27)
         {
             if(player.getHitCount() >= 1)
             {
@@ -167,7 +167,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
                 return;
             }
         }
-        // Greens Home Run
+        // Blues Home Run
         else if(destinationCell > 45 && token->color == "Blue" && cellNo <= 45 && cellNo >= 40)
         {
             if(player.getHitCount() >= 1)
@@ -268,7 +268,7 @@ bool Grid::isInVictoryPath(int cellNo, const std::string& color)
             return true;
         }
     }
-    else if(color == "Blue")
+    else if(color == "Green")
     {
         if(cellNo >= 57 && cellNo <= 61)
         {
@@ -282,7 +282,7 @@ bool Grid::isInVictoryPath(int cellNo, const std::string& color)
             return true;
         }
     }
-    else if(color == "Green")
+    else if(color == "Blue")
     {
         if(cellNo >= 67 && cellNo <= 71)
         {
@@ -298,7 +298,7 @@ bool Grid::isAreaSafe(int cellNo)
     {
         return true;
     }
-    // Safe areas in blue block
+    // Safe areas in green block
     else if(cellNo == 17 || cellNo == 21)
     {
         return true;
@@ -308,7 +308,7 @@ bool Grid::isAreaSafe(int cellNo)
     {
         return true;
     }
-    //safe area in green block
+    //safe area in blue block
     else if(cellNo == 42 || cellNo == 47)
     {
         return true;

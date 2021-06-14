@@ -17,3 +17,7 @@ int Player::getHitCount()const
 {
     return this->hitCount;
 }
+int Player::getTotalTokens()const
+{
+    return this->totalTokens;
+}
