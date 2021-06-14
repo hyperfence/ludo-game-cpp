@@ -62,7 +62,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
         }
         // Check if the token is about to win
         // Check for the red token
-        if(destinationCell >= 57)
+        if(destinationCell >= 57 && token->color == "Red")
         {
             if(destinationCell == 57)
             {
@@ -76,8 +76,8 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
                 return;
             }
         }
-        // check for the blue token
-        else if(destinationCell >= 62)
+        // check for the green token
+        else if(destinationCell >= 62 && token->color == "Green")
         {
             if(destinationCell == 62)
             {
@@ -92,7 +92,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             }
         }
         // check for the yellow token
-        else if(destinationCell >= 67)
+        else if(destinationCell >= 67 && token->color == "Yellow")
         {
             if(destinationCell == 67)
             {
@@ -106,8 +106,8 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
                 return;
             }
         }
-        // check for the green token
-        else if(destinationCell >= 72)
+        // check for the blue token
+        else if(destinationCell >= 72 && token->color == "Blue")
         {
             if(destinationCell == 72)
             {
@@ -134,7 +134,6 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             else
             {
                 std::cout << token->color << "'s Token " << token->tokenNum << " not allowed to enter victory!" << std::endl;
-                return;
             }
         }
         // Greens Home Run
@@ -147,9 +146,8 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
                 std::cout << token->color << "'s Token " << token->tokenNum << " entered victory path!" << std::endl;
             }
             else
-            {
+            {   
                 std::cout << token->color << "'s Token " << token->tokenNum << " not allowed to enter victory path!" << std::endl;
-                return;
             }
         }
         // Yellows Home Run
@@ -164,7 +162,6 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             else
             {
                 std::cout << token->color << "'s Token " << token->tokenNum << " not allowed to enter victory path!" << std::endl;
-                return;
             }
         }
         // Blues Home Run
@@ -179,7 +176,6 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             else
             {
                 std::cout << token->color << "'s Token " << token->tokenNum << " not allowed to enter victory path!" << std::endl;
-                return;
             }
         }
         // Check if token is legal to move, ie. no stacker is in way
@@ -232,7 +228,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             // If tokens aren't of same color then check if they are on the safe area
             if(temp->color != token->color)
             {
-                if(isAreaSafe(cellNo))
+                if(isAreaSafe(destinationCell))
                 {
                     // Both the token have different color, however, they are in safe area hence chaining them together
                     std::cout << "Multiple tokens resting in the safe area " << cellNo << "!" << std::endl;

@@ -170,7 +170,7 @@ void initHomeTokens(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
     for (int i = 1; i <= pl1.getTotalTokens(); i++)
     {
         Token *token = pl1.getToken(i);
-        if (token->cellNo != -1)
+        if (token->cellNo != -1 && token->won == false)
         {
             Coordinates drawCoord = BoardCoordinates[token->cellNo];
             DrawCircle(drawCoord.x, drawCoord.y, 15, BLACK);
@@ -178,28 +178,28 @@ void initHomeTokens(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
             DrawCircle(drawCoord.x, drawCoord.y, 15 / 2 + 1, BLACK);
             DrawText(to_string(token->tokenNum).c_str(), drawCoord.x - 2, drawCoord.y - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 1)
+        else if (token->cellNo == -1 && i == 1 && token->won == false)
         {
             DrawCircle(120, 395, 15, BLACK);
             DrawCircle(120, 395, 13, RED);
             DrawCircle(120, 395, 15 / 2 + 1, BLACK);
             DrawText("1", 120 - 2, 395 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 2)
+        else if (token->cellNo == -1 && i == 2 && token->won == false)
         {
             DrawCircle(155, 430, 15, BLACK);
             DrawCircle(155, 430, 13, RED);
             DrawCircle(155, 430, 15 / 2 + 1, BLACK);
             DrawText("2", 155 - 2, 430 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 3)
+        else if (token->cellNo == -1 && i == 3 && token->won == false)
         {
             DrawCircle(120, 465, 15, BLACK);
             DrawCircle(120, 465, 13, RED);
             DrawCircle(120, 465, 15 / 2 + 1, BLACK);
             DrawText("3", 120 - 2, 465 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 4)
+        else if (token->cellNo == -1 && i == 4 && token->won == false)
         {
             DrawCircle(85, 432, 15, BLACK);
             DrawCircle(85, 432, 13, RED);
@@ -211,7 +211,7 @@ void initHomeTokens(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
     for (int i = 1; i <= pl2.getTotalTokens(); i++)
     {
         Token *token = pl2.getToken(i);
-        if (token->cellNo != -1)
+        if (token->cellNo != -1 && token->won == false)
         {
             Coordinates drawCoord = BoardCoordinates[token->cellNo];
             DrawCircle(drawCoord.x, drawCoord.y, 15, BLACK);
@@ -219,28 +219,28 @@ void initHomeTokens(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
             DrawCircle(drawCoord.x, drawCoord.y, 15 / 2 + 1, BLACK);
             DrawText(to_string(token->tokenNum).c_str(), drawCoord.x - 2, drawCoord.y - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 1)
+        else if (token->cellNo == -1 && i == 1 && token->won == false)
         {
             DrawCircle(120, 85, 15, BLACK);
             DrawCircle(120, 85, 13, GREEN);
             DrawCircle(120, 85, 15 / 2 + 1, BLACK);
             DrawText("1", 120 - 2, 85 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 2)
+        else if (token->cellNo == -1 && i == 2 && token->won == false)
         {
             DrawCircle(155, 120, 15, BLACK);
             DrawCircle(155, 120, 13, GREEN);
             DrawCircle(155, 120, 15 / 2 + 1, BLACK);
             DrawText("2", 155 - 2, 120 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 3)
+        else if (token->cellNo == -1 && i == 3 && token->won == false)
         {
             DrawCircle(120, 155, 15, BLACK);
             DrawCircle(120, 155, 13, GREEN);
             DrawCircle(120, 155, 15 / 2 + 1, BLACK);
             DrawText("3", 120 - 2, 155 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 4)
+        else if (token->cellNo == -1 && i == 4 && token->won == false)
         {
             DrawCircle(86, 120, 15, BLACK);
             DrawCircle(86, 120, 13, GREEN);
@@ -252,7 +252,7 @@ void initHomeTokens(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
     for (int i = 1; i <= pl3.getTotalTokens(); i++)
     {
         Token *token = pl3.getToken(i);
-        if (token->cellNo != -1)
+        if (token->cellNo != -1 && token->won == false)
         {
             Coordinates drawCoord = BoardCoordinates[token->cellNo];
             DrawCircle(drawCoord.x, drawCoord.y, 15, BLACK);
@@ -260,28 +260,28 @@ void initHomeTokens(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
             DrawCircle(drawCoord.x, drawCoord.y, 15 / 2 + 1, BLACK);
             DrawText(to_string(token->tokenNum).c_str(), drawCoord.x - 2, drawCoord.y - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 1)
+        else if (token->cellNo == -1 && i == 1 && token->won == false)
         {
             DrawCircle(430, 85, 15, BLACK);
             DrawCircle(430, 85, 13, YELLOW);
             DrawCircle(430, 85, 15 / 2 + 1, BLACK);
             DrawText("1", 430 - 2, 85 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 2)
+        else if (token->cellNo == -1 && i == 2 && token->won == false)
         {
             DrawCircle(465, 120, 15, BLACK);
             DrawCircle(465, 120, 13, YELLOW);
             DrawCircle(465, 120, 15 / 2 + 1, BLACK);
             DrawText("2", 465 - 2, 120 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 3)
+        else if (token->cellNo == -1 && i == 3 && token->won == false)
         {
             DrawCircle(430, 155, 15, BLACK);
             DrawCircle(430, 155, 13, YELLOW);
             DrawCircle(430, 155, 15 / 2 + 1, BLACK);
             DrawText("3", 430 - 2, 155 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 4)
+        else if (token->cellNo == -1 && i == 4 && token->won == false)
         {
             DrawCircle(393, 120, 15, BLACK);
             DrawCircle(393, 120, 13, YELLOW);
@@ -293,7 +293,7 @@ void initHomeTokens(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
     for (int i = 1; i <= pl4.getTotalTokens(); i++)
     {
         Token *token = pl4.getToken(i);
-        if (token->cellNo != -1)
+        if (token->cellNo != -1 && token->won == false)
         {
             Coordinates drawCoord = BoardCoordinates[token->cellNo];
             DrawCircle(drawCoord.x, drawCoord.y, 15, BLACK);
@@ -301,28 +301,28 @@ void initHomeTokens(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
             DrawCircle(drawCoord.x, drawCoord.y, 15 / 2 + 1, BLACK);
             DrawText(to_string(token->tokenNum).c_str(), drawCoord.x - 2, drawCoord.y - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 1)
+        else if (token->cellNo == -1 && i == 1 && token->won == false)
         {
             DrawCircle(430, 396, 15, BLACK);
             DrawCircle(430, 396, 13, BLUE);
             DrawCircle(430, 396, 15 / 2 + 1, BLACK);
             DrawText("1", 430 - 2, 396 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 2)
+        else if (token->cellNo == -1 && i == 2 && token->won == false)
         {
             DrawCircle(465, 430, 15, BLACK);
             DrawCircle(465, 430, 13, BLUE);
             DrawCircle(465, 430, 15 / 2 + 1, BLACK);
             DrawText("2", 465 - 2, 430 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 3)
+        else if (token->cellNo == -1 && i == 3 && token->won == false)
         {
             DrawCircle(430, 465, 15, BLACK);
             DrawCircle(430, 465, 13, BLUE);
             DrawCircle(430, 465, 15 / 2 + 1, BLACK);
             DrawText("3", 430 - 2, 465 - 5, 13, WHITE);
         }
-        else if (token->cellNo == -1 && i == 4)
+        else if (token->cellNo == -1 && i == 4 && token->won == false)
         {
             DrawCircle(396, 430, 15, BLACK);
             DrawCircle(396, 430, 13, BLUE);
@@ -344,7 +344,7 @@ void DrawDice(int dice1, int dice2, int dice3)
     DrawText(to_string(dice3).c_str(), 698 + 18, 365 + 16, 20, BLACK);
 }
 
-void gameStats()
+void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
 {
     DrawText("Ludo", 587, 39, 70, WHITE);
     Rectangle rec = {581, 33, 173, 80};
@@ -357,56 +357,64 @@ void gameStats()
     // Red
     int x = 650;
     int y = 156;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < pl1.getTotalTokens(); i++)
     {
-        // Player 1 -> Red
-        DrawCircle(x, y, 15, BLACK);
-        DrawCircle(x, y, 13, RED);
-        DrawCircle(x, y, 15 / 2 + 1, BLACK);
-        DrawText(to_string(i + 1).c_str(), x - 2, y - 5, 13, WHITE);
-
+        Token* token = pl1.getToken(i+1);
+        if(token->won)
+        {
+            DrawCircle(x, y, 15, BLACK);
+            DrawCircle(x, y, 13, RED);
+            DrawCircle(x, y, 15 / 2 + 1, BLACK);
+            DrawText(to_string(i + 1).c_str(), x - 2, y - 5, 13, WHITE);
+        }
         x += 30;
     }
 
     // Green
     x = 650;
     y = 156 + 40;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < pl2.getTotalTokens(); i++)
     {
-        // Player 1 -> Red
-        DrawCircle(x, y, 15, BLACK);
-        DrawCircle(x, y, 13, GREEN);
-        DrawCircle(x, y, 15 / 2 + 1, BLACK);
-        DrawText(to_string(i + 1).c_str(), x - 2, y - 5, 13, WHITE);
-
+        Token* token = pl2.getToken(i+1);
+        if(token->won)
+        {
+            DrawCircle(x, y, 15, BLACK);
+            DrawCircle(x, y, 13, GREEN);
+            DrawCircle(x, y, 15 / 2 + 1, BLACK);
+            DrawText(to_string(i + 1).c_str(), x - 2, y - 5, 13, WHITE);
+        }
         x += 30;
     }
 
     // Yellow
     x = 650;
     y = 156 + 40 + 40;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < pl3.getTotalTokens(); i++)
     {
-        // Player 1 -> Red
-        DrawCircle(x, y, 15, BLACK);
-        DrawCircle(x, y, 13, YELLOW);
-        DrawCircle(x, y, 15 / 2 + 1, BLACK);
-        DrawText(to_string(i + 1).c_str(), x - 2, y - 5, 13, WHITE);
-
+        Token* token = pl3.getToken(i+1);
+        if(token->won)
+        {
+            DrawCircle(x, y, 15, BLACK);
+            DrawCircle(x, y, 13, YELLOW);
+            DrawCircle(x, y, 15 / 2 + 1, BLACK);
+            DrawText(to_string(i + 1).c_str(), x - 2, y - 5, 13, WHITE);
+        }
         x += 30;
     }
 
     // BLUE
     x = 650;
     y = 156 + 40 + 40 + 40;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < pl4.getTotalTokens(); i++)
     {
-        // Player 1 -> Red
-        DrawCircle(x, y, 15, BLACK);
-        DrawCircle(x, y, 13, BLUE);
-        DrawCircle(x, y, 15 / 2 + 1, BLACK);
-        DrawText(to_string(i + 1).c_str(), x - 2, y - 5, 13, WHITE);
-
+        Token* token = pl4.getToken(i+1);
+        if(token->won)
+        {
+            DrawCircle(x, y, 15, BLACK);
+            DrawCircle(x, y, 13, BLUE);
+            DrawCircle(x, y, 15 / 2 + 1, BLACK);
+            DrawText(to_string(i + 1).c_str(), x - 2, y - 5, 13, WHITE);
+        }
         x += 30;
     }
 }
@@ -437,13 +445,17 @@ int main()
 
     // Dice, player's turn, Token No.
     ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(6, player3, 1);
-    // ludoBoard.updateGrid(6, player3, 2);
-    // ludoBoard.updateGrid(5, player3, 1);
-    ludoBoard.updateGrid(5, player2, 2);
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(6, player2, 1);
+    ludoBoard.updateGrid(6, player2, 1);
+    // ludoBoard.updateGrid(1, player3, 1);
+    ludoBoard.updateGrid(6, player2, 1);
+    ludoBoard.updateGrid(6, player2, 1);
+    ludoBoard.updateGrid(6, player2, 1);
+    ludoBoard.updateGrid(6, player2, 1);
+    ludoBoard.updateGrid(6, player2, 1);
+    ludoBoard.updateGrid(6, player2, 1);
+    ludoBoard.updateGrid(6, player2, 1);
+    ludoBoard.updateGrid(3, player2, 1);
+
 
     int offset = 0;
     int dice1 = 0, dice2 = 0, dice3 = 0;
@@ -478,7 +490,7 @@ int main()
         }
         DrawDice(dice1, dice2, dice3);
         selectDice(0, 1, 0);
-        gameStats();
+        gameStats(player1, player2, player3, player4);
         int key = GetCharPressed();
         if (key)
         {

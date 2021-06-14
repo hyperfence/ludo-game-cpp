@@ -42,7 +42,8 @@ public:
     int getHitCount() const;
     int getTotalTokens() const;
     void rollDice();
-    void emptyDiceValues();
+    void resetDiceValues();
+    int* getDiceValues();
 };
 
 #endif

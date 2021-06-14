@@ -33,8 +33,12 @@ void Player::rollDice()
         }
     }
 }
-void Player::emptyDiceValues()
+void Player::resetDiceValues()
 {
     for(int i = 0; i < 3; i++)
         diceValue[i] = 0;
+}
+int* Player::getDiceValues()
+{
+    return this->diceValue;
 }
