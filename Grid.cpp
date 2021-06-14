@@ -79,7 +79,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
         // check for the blue token
         else if(destinationCell >= 62)
         {
-            if(destinationCell == 57)
+            if(destinationCell == 62)
             {
                 // Yay the token won so remove it from the board
                 board[token->xPos][token->yPos] = nullptr;
@@ -123,7 +123,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
         }
         // Check if the token is ready to go to the victory path
         // Reds Home Run
-        if(destinationCell > 6 && token->color == "Red" && cellNo <= 6 && cellNo >= 2)
+        if(destinationCell > 6 && token->color == "Red" && cellNo <= 6 && cellNo >= 1)
         {
             if(player.getHitCount() >= 1)
             {
@@ -138,7 +138,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             }
         }
         // Blues Home Run
-        else if(destinationCell > 19 && token->color == "Blue" && cellNo <= 19 && cellNo >= 15)
+        else if(destinationCell > 19 && token->color == "Blue" && cellNo <= 19 && cellNo >= 14)
         {
             if(player.getHitCount() >= 1)
             {
@@ -153,7 +153,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             }
         }
         // Yellows Home Run
-        else if(destinationCell > 32 && token->color == "Blue" && cellNo <= 32 && cellNo >= 28)
+        else if(destinationCell > 32 && token->color == "Blue" && cellNo <= 32 && cellNo >= 27)
         {
             if(player.getHitCount() >= 1)
             {
@@ -168,7 +168,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             }
         }
         // Greens Home Run
-        else if(destinationCell > 45 && token->color == "Blue" && cellNo <= 45 && cellNo >= 41)
+        else if(destinationCell > 45 && token->color == "Blue" && cellNo <= 45 && cellNo >= 40)
         {
             if(player.getHitCount() >= 1)
             {
@@ -193,6 +193,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
                     int stackCount = 0;
                     Token* opponent = static_cast<Token*>(board[temp.x][temp.y]);
                     std::string opponentColor = opponent->color;
+                    // For teams stacking...
                     while(opponent != NULL)
                     {
                         if(opponentColor != opponent->color)

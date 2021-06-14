@@ -5,6 +5,8 @@
 #include "Grid.h"
 #include "Player.h"
 #include "Token.h"
+#include <cstdlib>
+#include <time.h>
 
 class GamePlay
 {
@@ -18,8 +20,9 @@ class GamePlay
     public:
         GamePlay()
         {
-
+            srand(time(NULL));
         }
+        int rollDice();
 
 };
 
