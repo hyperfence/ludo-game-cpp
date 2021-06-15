@@ -1,14 +1,16 @@
+/*
+    Group Member1: Malik Talha Saeed    - 19I-0413(D)
+    Group Member2: Hammad Ahmed         - 19I-0582(D)
+*/
 #include "raylib.h"
 #include <iostream>
 #include <unistd.h>
 #include <cstdlib>
 #include <time.h>
-#include "GamePlay.cpp"
 #include "Grid.cpp"
 #include <string.h>
 #include <pthread.h>
 #include <semaphore.h>
-
 using namespace std;
 
 Grid ludoBoard;
@@ -18,15 +20,19 @@ int selectedToken = -1;
 bool turnCompleted = false;
 int diceValues[3] = {0};
 sem_t playersTurn_sem;
+sem_t dice_sem;
 int mainTurn;
+int playersWon[4] = {0}; // Keeps the record of winning players..
+int iter = 0;            // To iterate over playersWon array
+bool gameEnd = false;
 bool canStartScreen = true;
 Player player1(4, "Red", "Talha");
 Player player2(4, "Green", "Hammad");
 Player player3(4, "Yellow", "Hamza");
 Player player4(4, "Blue", "Abdullah");
 /*
-        A function that initializes the grid coordinates..
-    */
+    A function that initializes the grid coordinates..
+*/
 
 void selectDice(int dice1, int dice2, int dice3)
 {
@@ -54,7 +60,6 @@ void selectDice(int dice1, int dice2, int dice3)
             selectedDice = 2;
         }
     }
-
     if (selectedDice == 0)
     {
         Rectangle rec = {580, 363, 53, 53};
@@ -390,7 +395,7 @@ void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
     DrawText("Player 2: ", 563, 188, 17, WHITE);
     DrawText("Player 3: ", 563, 228, 17, WHITE);
     DrawText("Player 4: ", 563, 268, 17, WHITE);
-    DrawLine(752,147,752,286,WHITE);
+    DrawLine(770, 140, 770, 295, WHITE);
 
     // Red
     int x = 650;
@@ -407,6 +412,7 @@ void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
         }
         x += 30;
     }
+    DrawText(to_string(pl1.getHitCount()).c_str(), x + 5, y - 9, 30, GREEN);
 
     // Green
     x = 650;
@@ -423,7 +429,7 @@ void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
         }
         x += 30;
     }
-
+    DrawText(to_string(pl2.getHitCount()).c_str(), x + 5, y - 9, 30, GREEN);
     // Yellow
     x = 650;
     y = 156 + 40 + 40;
@@ -439,6 +445,7 @@ void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
         }
         x += 30;
     }
+    DrawText(to_string(pl3.getHitCount()).c_str(), x + 5, y - 9, 30, GREEN);
 
     // BLUE
     x = 650;
@@ -454,6 +461,127 @@ void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
             DrawText(to_string(i + 1).c_str(), x - 2, y - 5, 13, WHITE);
         }
         x += 30;
+    }
+    DrawText(to_string(pl4.getHitCount()).c_str(), x + 5, y - 9, 30, GREEN);
+    bool pl1Exists = false;
+    for (int i = 0; i < 4; i++)
+    {
+        if (playersWon[i] == 1)
+        {
+            pl1Exists = true;
+        }
+    }
+    if (pl1Exists)
+    {
+        int count = 0;
+        for (int i = 1; i <= player1.getTotalTokens(); i++)
+        {
+            Token *token = player1.getToken(i);
+            if (token->won == true)
+            {
+                count++;
+            }
+        }
+        if (count == player1.getTotalTokens())
+        {
+            playersWon[iter] = 1;
+            iter++;
+        }
+    }
+
+    // Player 2 Won
+    bool pl2Exists = false;
+    for (int i = 0; i < 4; i++)
+    {
+        if (playersWon[i] == 2)
+        {
+            pl2Exists = true;
+        }
+    }
+    if (pl2Exists)
+    {
+        int count = 0;
+        for (int i = 1; i <= player2.getTotalTokens(); i++)
+        {
+            Token *token = player2.getToken(i);
+            if (token->won == true)
+            {
+                count++;
+            }
+        }
+        if (count == player2.getTotalTokens())
+        {
+            playersWon[iter] = 2;
+            iter++;
+        }
+    }
+
+    // Player 3 Won
+    bool pl3Exists = false;
+    for (int i = 0; i < 4; i++)
+    {
+        if (playersWon[i] == 3)
+        {
+            pl3Exists = true;
+        }
+    }
+    if (pl3Exists)
+    {
+        int count = 0;
+        for (int i = 1; i <= player3.getTotalTokens(); i++)
+        {
+            Token *token = player3.getToken(i);
+            if (token->won == true)
+            {
+                count++;
+            }
+        }
+        if (count == player3.getTotalTokens())
+        {
+            playersWon[iter] = 3;
+            iter++;
+        }
+    }
+
+    // Player 4 Won
+    bool pl4Exists = false;
+    for (int i = 0; i < 4; i++)
+    {
+        if (playersWon[i] == 4)
+        {
+            pl4Exists = true;
+        }
+    }
+    if (pl4Exists)
+    {
+        int count = 0;
+        for (int i = 1; i <= player4.getTotalTokens(); i++)
+        {
+            Token *token = player4.getToken(i);
+            if (token->won == true)
+            {
+                count++;
+            }
+        }
+        if (count == player4.getTotalTokens())
+        {
+            playersWon[iter] = 4;
+            iter++;
+        }
+    }
+
+    // To end the game...
+    for (int i = 0; i < 4; i++)
+    {
+        if (playersWon[i] != 0)
+        {
+            gameEnd = true;
+        }
+        else
+        {
+            gameEnd = false;
+            break;
+        }
     }
 }
 Player *getPlayer(int ID)
@@ -481,6 +609,7 @@ void *playerTurn(void *args)
     sem_wait(&playersTurn_sem);
     mainTurn = *(int *)args;
 
+    sem_wait(&dice_sem);
     Player *currPlayer;
     currPlayer = getPlayer(mainTurn);
     currPlayer->rollDice(0);
@@ -500,6 +629,8 @@ void *playerTurn(void *args)
     diceValues[0] = diceVals[0];
     diceValues[1] = diceVals[1];
     diceValues[2] = diceVals[2];
+
+    sem_post(&dice_sem);
     turnCompleted = false;
     currPlayer->resetDiceValues();
     while (turnCompleted == false)
@@ -610,28 +741,31 @@ void startScreen(Texture2D Screen)
         canStartScreen = false;
     }
 }
+
+void endScreen()
+{
+    DrawRectangle(0, 0, 830, 550, BLACK);
+    DrawText("Game Ended!", 225, 107, 70, WHITE);
+    DrawText("Winners ", 340, 200, 50, GREEN);
+
+    string str;
+    int x = 340;
+    int y = 260;
+    for(int i = 0; i < 4; i++)
+    {   
+        str = "Player No. " + to_string(playersWon[i]);
+        DrawText(str.c_str(), x, y, 30, GRAY);
+        y += 50;
+    }
+}
 int main()
 {
-    // Players & Board
     sem_init(&playersTurn_sem, 0, 1);
-
-    // Dice, player's turn, Token No.
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(1, player3, 1);
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(6, player2, 1);
-    // ludoBoard.updateGrid(3, player2, 1);
+    sem_init(&dice_sem, 0, 1);
 
     pthread_t th;
     pthread_create(&th, NULL, &masterThread, NULL);
 
-    // 1000 -> Width, Board(800X800)
     const int window_width = 830;
     const int window_height = 550;
     srand(time(NULL));
@@ -649,7 +783,7 @@ int main()
     {
         BeginDrawing();
         ClearBackground(BLACK);
-        if (!canStartScreen)
+        if (!canStartScreen && gameEnd == false)
         {
             DrawTexture(Board, 0, 0, WHITE);
 
@@ -686,8 +820,6 @@ int main()
                     selectedToken = 4;
                     std::cout << "Pressed 2" << std::endl;
                 }
-                // offset += player1.rollDice();
-                //DrawToken(BLUE, offset);
             }
             // 0 -> Left click, 1 -> Right click
             if (IsMouseButtonPressed(0))
@@ -696,18 +828,23 @@ int main()
                 canRoll = isButtonPressed();
             }
         }
+        else if(gameEnd == true)
+        {
+            endScreen();
+        }
         else
         {
             startScreen(Screen);
         }
-
         EndDrawing();
     }
 
     sem_destroy(&playersTurn_sem);
+    sem_destroy(&dice_sem);
 
     // Unloading from RAM
     UnloadTexture(Board);
     UnloadTexture(Screen);
+
     CloseWindow();
 }

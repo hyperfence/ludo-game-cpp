@@ -1,3 +1,7 @@
+/*
+    Group Member1: Malik Talha Saeed    - 19I-0413(D)
+    Group Member2: Hammad Ahmed         - 19I-0582(D)
+*/
 #ifndef PLAYER_H
 #define PLAYER_H
 
