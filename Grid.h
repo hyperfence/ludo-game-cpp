@@ -37,7 +37,7 @@ class Grid
                 }
             }
         }
-        void updateGrid(int diceValue, Player& player, int tokenNum);
+        void updateGrid(int diceValue, Player& player, int tokenNum, int& errorStatus);
         bool isAreaSafe(int cellNo);
         bool isInVictoryPath(int cellNo, const std::string& color);
         Coordinates get2DCoordinates(int cellNo);

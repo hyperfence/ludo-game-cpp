@@ -1,10 +1,11 @@
 #include "Grid.h"
 
-void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
+void Grid::updateGrid(int diceValue, Player& player, int tokenNum, int& errorStatus)
 {
     Token* token = player.getToken(tokenNum);
     std::cout << token->color << "'s Token " << token->tokenNum << " Address: " << token << std::endl;
     int cellNo = token->cellNo;
+    errorStatus = 0; // No errors in the beginning
     // Check if the token is inside home
     if(token->cellNo == -1 && token->xPos == -1 && token->yPos == -1)
     {
@@ -50,6 +51,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
         else
         {
             std::cout << token->color << "'s Token " << tokenNum << " can't leave home! Six is required to leave." << std::endl;
+            errorStatus = 1;
             return;
         }
     }
@@ -73,6 +75,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             else
             {   
                 std::cout << token->color << "'s Token " << tokenNum << " can't finish victory path! " << 57 - cellNo << " is required to win." << std::endl;
+                errorStatus = 2;
                 return;
             }
         }
@@ -88,6 +91,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             else
             {   
                 std::cout << token->color << "'s Token " << tokenNum << " can't finish victory path! " << 62 - cellNo << " is required to win." << std::endl;
+                errorStatus = 2;
                 return;
             }
         }
@@ -103,6 +107,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             else
             {   
                 std::cout << token->color << "'s Token " << tokenNum << " can't finish victory path! " << 67 - cellNo << " is required to win." << std::endl;
+                errorStatus = 2;
                 return;
             }
         }
@@ -118,6 +123,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
             else
             {   
                 std::cout << token->color << "'s Token " << tokenNum << " can't finish victory path! " << 72 - cellNo << " is required to win." << std::endl;
+                errorStatus = 2;
                 return;
             }
         }
@@ -203,6 +209,7 @@ void Grid::updateGrid(int diceValue, Player& player, int tokenNum)
                     if(stackCount >= 2)
                     {
                         std::cout << token->color << "'s Token " << token->tokenNum << " can't take turn! Opponent " << opponentColor << "'s stack is in way." << std::endl;
+                        errorStatus = 3;
                         return;
                     }
                 }

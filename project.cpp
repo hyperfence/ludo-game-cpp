@@ -460,22 +460,18 @@ Player *getPlayer(int ID)
 {
     if (ID == 0)
     {
-        std::cout << "New Player's Address: " << &player1 << std::endl;
         return &player1;
     }
     else if (ID == 1)
     {
-        std::cout << "New Player's Address: " << &player2 << std::endl;
         return &player2;
     }
     else if (ID == 2)
     {
-        std::cout << "New Player's Address: " << &player3 << std::endl;
         return &player3;
     }
     else if (ID == 3)
     {
-        std::cout << "New Player's Address: " << &player4 << std::endl;
         return &player4;
     }
     return NULL;
@@ -487,13 +483,8 @@ void *playerTurn(void *args)
 
     Player *currPlayer;
     currPlayer = getPlayer(mainTurn);
-    std::cout << "Player's Address: " << currPlayer << std::endl;
-    std::cout << "Turn: " << mainTurn << std::endl;
     currPlayer->rollDice(0);
     int *diceVals = currPlayer->getDiceValues();
-    std::cout << "Dic Vale 0: " << diceVals[0] << std::endl;
-    std::cout << "Dic Vale 1: " << diceVals[1] << std::endl;
-    std::cout << "Dic Vale 2: " << diceVals[2] << std::endl;
     if (diceVals[0] == 6)
     {
         currPlayer->rollDice(1);
@@ -522,7 +513,8 @@ void *playerTurn(void *args)
         {
             usleep(1000);
         }
-        ludoBoard.updateGrid(diceValues[selectedDice], *currPlayer, selectedToken);
+        int errorStatus = -1;
+        ludoBoard.updateGrid(diceValues[selectedDice], *currPlayer, selectedToken, errorStatus);
         diceValues[selectedDice] = 0;
         turnCompleted = true;
         selectedDice = -1;
@@ -535,11 +527,6 @@ void *playerTurn(void *args)
             }
         }
     }
-
-    // ludoBoard.updateGrid(diceValues[selectedDice], *currPlayer, 1);
-    std::cout << "Dice Vale 0: " << diceValues[0] << std::endl;
-    std::cout << "Dice Vale 1: " << diceValues[1] << std::endl;
-    std::cout << "Dice Vale 2: " << diceValues[2] << std::endl;
     sem_post(&playersTurn_sem);
     return NULL;
 }
