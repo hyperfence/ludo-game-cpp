@@ -6,14 +6,27 @@
 #include "GamePlay.cpp"
 #include "Grid.cpp"
 #include <string.h>
+#include <pthread.h>
+#include <semaphore.h>
 
 using namespace std;
 
+Grid ludoBoard;
 Coordinates BoardCoordinates[72];
-int selectedDice;
+int selectedDice = -1;
+int selectedToken = -1;
+bool turnCompleted = false;
+int diceValues[3] = {0};
+sem_t playersTurn_sem;
+int mainTurn;
+bool canStartScreen = true;
+Player player1(4, "Red", "Talha");
+Player player2(4, "Green", "Hammad");
+Player player3(4, "Yellow", "Hamza");
+Player player4(4, "Blue", "Abdullah");
 /*
-    A function that initializes the grid coordinates..
-*/
+        A function that initializes the grid coordinates..
+    */
 
 void selectDice(int dice1, int dice2, int dice3)
 {
@@ -21,35 +34,38 @@ void selectDice(int dice1, int dice2, int dice3)
     {
         if (GetMouseY() >= 366 && GetMouseY() <= 415 && IsMouseButtonPressed(0))
         {
-            selectedDice = 1;
+            std::cout << "Dice Selected" << std::endl;
+            selectedDice = 0;
         }
     }
     else if (GetMouseX() >= 642 && GetMouseX() <= 690 && IsMouseButtonPressed(0) && dice2 != 0)
     {
         if (GetMouseY() >= 366 && GetMouseY() <= 415 && IsMouseButtonPressed(0))
         {
-            selectedDice = 2;
+            std::cout << "Dice Selected" << std::endl;
+            selectedDice = 1;
         }
     }
     else if (GetMouseX() >= 700 && GetMouseX() <= 748 && IsMouseButtonPressed(0) && dice3 != 0)
     {
         if (GetMouseY() >= 366 && GetMouseY() <= 415 && IsMouseButtonPressed(0))
         {
-            selectedDice = 3;
+            std::cout << "Dice Selected" << std::endl;
+            selectedDice = 2;
         }
     }
 
-    if (selectedDice == 1)
+    if (selectedDice == 0)
     {
         Rectangle rec = {580, 363, 53, 53};
         DrawRectangleLinesEx(rec, 4, RED);
     }
-    else if (selectedDice == 2)
+    else if (selectedDice == 1)
     {
         Rectangle rec = {638, 363, 53, 53};
         DrawRectangleLinesEx(rec, 4, RED);
     }
-    else if (selectedDice == 3)
+    else if (selectedDice == 2)
     {
         Rectangle rec = {696, 363, 53, 53};
         DrawRectangleLinesEx(rec, 4, RED);
@@ -342,6 +358,27 @@ void DrawDice(int dice1, int dice2, int dice3)
 
     DrawRectangle(698, 365, 50, 50, WHITE);
     DrawText(to_string(dice3).c_str(), 698 + 18, 365 + 16, 20, BLACK);
+
+    if (mainTurn == 0)
+    {
+        std::string show = "RED's Turn";
+        DrawText(show.c_str(), 582, 508, 20, RED);
+    }
+    else if (mainTurn == 1)
+    {
+        std::string show = "GREEN's Turn";
+        DrawText(show.c_str(), 582, 508, 20, GREEN);
+    }
+    else if (mainTurn == 2)
+    {
+        std::string show = "YELLOW's Turn";
+        DrawText(show.c_str(), 582, 508, 20, YELLOW);
+    }
+    else if (mainTurn == 3)
+    {
+        std::string show = "BLUE's Turn";
+        DrawText(show.c_str(), 582, 508, 20, BLUE);
+    }
 }
 
 void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
@@ -353,14 +390,15 @@ void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
     DrawText("Player 2: ", 563, 188, 17, WHITE);
     DrawText("Player 3: ", 563, 228, 17, WHITE);
     DrawText("Player 4: ", 563, 268, 17, WHITE);
+    DrawLine(752,147,752,286,WHITE);
 
     // Red
     int x = 650;
     int y = 156;
     for (int i = 0; i < pl1.getTotalTokens(); i++)
     {
-        Token* token = pl1.getToken(i+1);
-        if(token->won)
+        Token *token = pl1.getToken(i + 1);
+        if (token->won)
         {
             DrawCircle(x, y, 15, BLACK);
             DrawCircle(x, y, 13, RED);
@@ -375,8 +413,8 @@ void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
     y = 156 + 40;
     for (int i = 0; i < pl2.getTotalTokens(); i++)
     {
-        Token* token = pl2.getToken(i+1);
-        if(token->won)
+        Token *token = pl2.getToken(i + 1);
+        if (token->won)
         {
             DrawCircle(x, y, 15, BLACK);
             DrawCircle(x, y, 13, GREEN);
@@ -391,8 +429,8 @@ void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
     y = 156 + 40 + 40;
     for (int i = 0; i < pl3.getTotalTokens(); i++)
     {
-        Token* token = pl3.getToken(i+1);
-        if(token->won)
+        Token *token = pl3.getToken(i + 1);
+        if (token->won)
         {
             DrawCircle(x, y, 15, BLACK);
             DrawCircle(x, y, 13, YELLOW);
@@ -407,8 +445,8 @@ void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
     y = 156 + 40 + 40 + 40;
     for (int i = 0; i < pl4.getTotalTokens(); i++)
     {
-        Token* token = pl4.getToken(i+1);
-        if(token->won)
+        Token *token = pl4.getToken(i + 1);
+        if (token->won)
         {
             DrawCircle(x, y, 15, BLACK);
             DrawCircle(x, y, 13, BLUE);
@@ -418,12 +456,138 @@ void gameStats(Player &pl1, Player &pl2, Player &pl3, Player &pl4)
         x += 30;
     }
 }
+Player *getPlayer(int ID)
+{
+    if (ID == 0)
+    {
+        std::cout << "New Player's Address: " << &player1 << std::endl;
+        return &player1;
+    }
+    else if (ID == 1)
+    {
+        std::cout << "New Player's Address: " << &player2 << std::endl;
+        return &player2;
+    }
+    else if (ID == 2)
+    {
+        std::cout << "New Player's Address: " << &player3 << std::endl;
+        return &player3;
+    }
+    else if (ID == 3)
+    {
+        std::cout << "New Player's Address: " << &player4 << std::endl;
+        return &player4;
+    }
+    return NULL;
+}
+void *playerTurn(void *args)
+{
+    sem_wait(&playersTurn_sem);
+    mainTurn = *(int *)args;
+
+    Player *currPlayer;
+    currPlayer = getPlayer(mainTurn);
+    std::cout << "Player's Address: " << currPlayer << std::endl;
+    std::cout << "Turn: " << mainTurn << std::endl;
+    currPlayer->rollDice(0);
+    int *diceVals = currPlayer->getDiceValues();
+    std::cout << "Dic Vale 0: " << diceVals[0] << std::endl;
+    std::cout << "Dic Vale 1: " << diceVals[1] << std::endl;
+    std::cout << "Dic Vale 2: " << diceVals[2] << std::endl;
+    if (diceVals[0] == 6)
+    {
+        currPlayer->rollDice(1);
+        if (diceVals[1] == 6)
+        {
+            currPlayer->rollDice(2);
+            if (diceVals[2] == 6)
+            {
+                currPlayer->resetDiceValues();
+            }
+        }
+    }
+    diceValues[0] = diceVals[0];
+    diceValues[1] = diceVals[1];
+    diceValues[2] = diceVals[2];
+    turnCompleted = false;
+    currPlayer->resetDiceValues();
+    while (turnCompleted == false)
+    {
+        while (selectedDice == -1)
+        {
+            usleep(1000);
+        }
+        std::cout << "Reached" << std::endl;
+        while (selectedToken == -1)
+        {
+            usleep(1000);
+        }
+        ludoBoard.updateGrid(diceValues[selectedDice], *currPlayer, selectedToken);
+        diceValues[selectedDice] = 0;
+        turnCompleted = true;
+        selectedDice = -1;
+        selectedToken = -1;
+        for (int i = 0; i < 3; i++)
+        {
+            if (diceValues[i] != 0)
+            {
+                turnCompleted = false;
+            }
+        }
+    }
+
+    // ludoBoard.updateGrid(diceValues[selectedDice], *currPlayer, 1);
+    std::cout << "Dice Vale 0: " << diceValues[0] << std::endl;
+    std::cout << "Dice Vale 1: " << diceValues[1] << std::endl;
+    std::cout << "Dice Vale 2: " << diceValues[2] << std::endl;
+    sem_post(&playersTurn_sem);
+    return NULL;
+}
+void *masterThread(void *args)
+{
+    pthread_t th[4];
+    while (true)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            int *value = new int;
+            *value = i;
+            pthread_create(&th[i], NULL, &playerTurn, value);
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            pthread_join(th[i], NULL);
+        }
+    }
+    return NULL;
+}
 
 void DrawButton()
 {
-    DrawCircle(666, 455, 30, BLACK);
-    DrawCircle(666, 455, 30, RED);
-    DrawCircle(666, 455, 30 / 2 + 1, PURPLE);
+    if (mainTurn == 0)
+    {
+        DrawCircle(666, 455, 30, BLACK);
+        DrawCircle(666, 455, 30, RED);
+        DrawCircle(666, 455, 30 / 2 + 1, WHITE);
+    }
+    else if (mainTurn == 1)
+    {
+        DrawCircle(666, 455, 30, BLACK);
+        DrawCircle(666, 455, 30, GREEN);
+        DrawCircle(666, 455, 30 / 2 + 1, PURPLE);
+    }
+    else if (mainTurn == 2)
+    {
+        DrawCircle(666, 455, 30, BLACK);
+        DrawCircle(666, 455, 30, YELLOW);
+        DrawCircle(666, 455, 30 / 2 + 1, PURPLE);
+    }
+    else if (mainTurn == 3)
+    {
+        DrawCircle(666, 455, 30, BLACK);
+        DrawCircle(666, 455, 30, BLUE);
+        DrawCircle(666, 455, 30 / 2 + 1, PURPLE);
+    }
 }
 
 bool isButtonPressed()
@@ -434,33 +598,54 @@ bool isButtonPressed()
     return false;
 }
 
+bool isStartScreenButton()
+{
+    if (GetMouseX() >= 624 && GetMouseX() <= 703)
+        if (GetMouseY() >= 224 && GetMouseY() <= 301)
+            return true;
+    return false;
+}
+void startScreen(Texture2D Screen)
+{
+    DrawText("Ludo", 587, 39, 70, WHITE);
+    DrawText("Play Game", 563, 310, 40, GREEN);
+    Rectangle rec = {581, 33, 173, 80};
+    DrawRectangleLinesEx(rec, 4, RED);
+    DrawTexture(Screen, 0, 0, WHITE);
+    DrawCircle(663, 261, 40, SKYBLUE);
+    Vector2 v1 = {648, 239};
+    Vector2 v2 = {648, 278};
+    Vector2 v3 = {693, 262};
+
+    DrawTriangle(v1, v2, v3, GRAY);
+    if (isStartScreenButton() == true && (IsMouseButtonPressed(0)))
+    {
+        canStartScreen = false;
+    }
+}
 int main()
 {
     // Players & Board
-    Player player1(4, "Red", "Talha");
-    Player player2(4, "Green", "Hammad");
-    Player player3(4, "Yellow", "Hamza");
-    Player player4(4, "Blue", "Abdullah");
-    Grid ludoBoard;
+    sem_init(&playersTurn_sem, 0, 1);
 
     // Dice, player's turn, Token No.
-    ludoBoard.updateGrid(6, player2, 1);
-    ludoBoard.updateGrid(6, player2, 1);
+    // ludoBoard.updateGrid(6, player2, 1);
+    // ludoBoard.updateGrid(6, player2, 1);
     // ludoBoard.updateGrid(1, player3, 1);
-    ludoBoard.updateGrid(6, player2, 1);
-    ludoBoard.updateGrid(6, player2, 1);
-    ludoBoard.updateGrid(6, player2, 1);
-    ludoBoard.updateGrid(6, player2, 1);
-    ludoBoard.updateGrid(6, player2, 1);
-    ludoBoard.updateGrid(6, player2, 1);
-    ludoBoard.updateGrid(6, player2, 1);
-    ludoBoard.updateGrid(3, player2, 1);
+    // ludoBoard.updateGrid(6, player2, 1);
+    // ludoBoard.updateGrid(6, player2, 1);
+    // ludoBoard.updateGrid(6, player2, 1);
+    // ludoBoard.updateGrid(6, player2, 1);
+    // ludoBoard.updateGrid(6, player2, 1);
+    // ludoBoard.updateGrid(6, player2, 1);
+    // ludoBoard.updateGrid(6, player2, 1);
+    // ludoBoard.updateGrid(3, player2, 1);
 
+    pthread_t th;
+    pthread_create(&th, NULL, &masterThread, NULL);
 
-    int offset = 0;
-    int dice1 = 0, dice2 = 0, dice3 = 0;
     // 1000 -> Width, Board(800X800)
-    const int window_width = 780;
+    const int window_width = 830;
     const int window_height = 550;
     srand(time(NULL));
 
@@ -468,6 +653,7 @@ int main()
     InitWindow(window_width, window_height, "Ludo");
 
     Texture2D Board = LoadTexture("./Images/Board.png");
+    Texture2D Screen = LoadTexture("./Images/StartScreen.png");
 
     bool canRoll = false;
 
@@ -476,37 +662,65 @@ int main()
     {
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawTexture(Board, 0, 0, WHITE);
-        initHomeTokens(player1, player2, player3, player4);
-        DrawButton();
+        if (!canStartScreen)
+        {
+            DrawTexture(Board, 0, 0, WHITE);
 
-        if (canRoll)
-        {
-            // SUS
-            player1.rollDice();
-            player1.rollDice();
-            player1.rollDice();
-            canRoll = false;
+            initHomeTokens(player1, player2, player3, player4);
+            DrawButton();
+
+            if (canRoll)
+            {
+                canRoll = false;
+            }
+            DrawDice(diceValues[0], diceValues[1], diceValues[2]);
+            selectDice(diceValues[0], diceValues[1], diceValues[2]);
+            gameStats(player1, player2, player3, player4);
+            int key = GetCharPressed();
+            if (key)
+            {
+                if (key == '1' && turnCompleted == false)
+                {
+                    selectedToken = 1;
+                    std::cout << "Pressed 1" << std::endl;
+                }
+                else if (key == '2' && turnCompleted == false)
+                {
+                    selectedToken = 2;
+                    std::cout << "Pressed 2" << std::endl;
+                }
+                else if (key == '3' && turnCompleted == false)
+                {
+                    selectedToken = 3;
+                    std::cout << "Pressed 2" << std::endl;
+                }
+                else if (key == '4' && turnCompleted == false)
+                {
+                    selectedToken = 4;
+                    std::cout << "Pressed 2" << std::endl;
+                }
+                // offset += player1.rollDice();
+                //DrawToken(BLUE, offset);
+            }
+            // 0 -> Left click, 1 -> Right click
+            if (IsMouseButtonPressed(0))
+            {
+                cout << GetMouseX() << " " << GetMouseY() << endl;
+                canRoll = isButtonPressed();
+            }
         }
-        DrawDice(dice1, dice2, dice3);
-        selectDice(0, 1, 0);
-        gameStats(player1, player2, player3, player4);
-        int key = GetCharPressed();
-        if (key)
+        else
         {
-            // offset += player1.rollDice();
-            //DrawToken(BLUE, offset);
+            startScreen(Screen);
         }
-        // 0 -> Left click, 1 -> Right click
-        if (IsMouseButtonPressed(0))
-        {
-            cout << GetMouseX() << " " << GetMouseY() << endl;
-            canRoll = isButtonPressed();
-        }
+
         EndDrawing();
     }
 
+    sem_destroy(&playersTurn_sem);
+
     // Unloading from RAM
     UnloadTexture(Board);
+    UnloadTexture(Screen);
     CloseWindow();
 }

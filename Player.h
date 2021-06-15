@@ -13,7 +13,7 @@ private:
     Token *tokens;
     int totalTokens;
     int hitCount;
-    int diceValue[3];
+    int* diceValue;
 
 public:
     Player(int totalTokens, const std::string &color, const std::string name)
@@ -23,6 +23,7 @@ public:
         this->color = color;
         this->hitCount = 0;
         this->tokens = new Token[totalTokens];
+        this->diceValue = new int[3];
         for (int i = 0; i < totalTokens; i++)
         {
             this->tokens[i].color = color;
@@ -41,7 +42,7 @@ public:
     void incHitCount();
     int getHitCount() const;
     int getTotalTokens() const;
-    void rollDice();
+    void rollDice(int index);
     void resetDiceValues();
     int* getDiceValues();
 };

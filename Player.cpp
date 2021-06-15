@@ -21,17 +21,9 @@ int Player::getTotalTokens()const
 {
     return this->totalTokens;
 }
-void Player::rollDice()
+void Player::rollDice(int index)
 {
-    diceValue[0] = (rand()%6 + 1);
-    if(diceValue[0] == 6)
-    {
-        diceValue[1] = (rand()%6 + 1);
-        if(diceValue[1] == 6)
-        {
-            diceValue[2] = (rand()%6 + 1);
-        }
-    }
+    diceValue[index] = (rand()%6 + 1);
 }
 void Player::resetDiceValues()
 {
